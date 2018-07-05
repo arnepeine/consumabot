@@ -1,8 +1,8 @@
 #!/bin/bash
+#This script collects pictures from the Raspberry Pi camera and puts them into folders for NN training
 
 echo "Welcome to the training image acquisition tool for Consumabot"
 echo "This script is released under GPL 3.0 license"
-echo "https://github.com/arnepeine/consumabot"
 
 echo "How long do we want to train? (in seconds)"
 read length
@@ -24,5 +24,5 @@ sleep 1
 
 longms=$(($length*1000)) 
 intervalms=$(($interval*1000))
-raspistill -t $longms -tl $intervalms -o ~/train/$prefix/%d.jpg -v
-sleep 1
+raspistill -t $longms -tl $intervalms -o ~/train/$prefix/%d.jpg -v -awb auto -sh 100
+sleep 10
