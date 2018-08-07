@@ -1,6 +1,7 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+from time import sleep
 
 from picamera import PiCamera
 import argparse
@@ -128,15 +129,13 @@ def run_program():
   text.value = list_of_predictions[0]
   sess.close()
   tf.reset_default_graph()
-  
   camera = PiCamera()
-  try:
-    camera.resolution = (1024, 768)
-    #camera.start_preview()
-    camera.capture('tf_files/capture.jpg')
-    pass
-  finally:
-    camera.close()
+  camera.resolution = (1024, 768)
+  sleep(2)
+  print ("Sleeping")
+  camera.capture('tf_files/capture.jpg')
+  camera.close()
+  print("Photo taken")
     
 app = App(title="Consumabot 0.3", bg="white", layout="auto", width=800, height=480)
 logo = Picture(app, image="elements/consumabot.png", grid=[2,0])
@@ -145,5 +144,6 @@ text = Text(app, text="Starting detection", size=22, color="grey", font="Arial",
 
 logo.width = 600
 logo.height = 100
-text.repeat(1000, run_program)  # Schedule call to counter() every 1000ms
+text.repeat(1000, run_program)
+#text.repeat(500, take_picture) # Schedule call to counter() every 1000ms
 app.display()    
