@@ -6,7 +6,7 @@ from picamera import PiCamera
 import argparse
 import sys
 import time
-from guizero import App, Text
+from guizero import App, Text, Picture
 import numpy as np
 import tensorflow as tf
 
@@ -107,9 +107,7 @@ if __name__ == "__main__":
   input_operation = graph.get_operation_by_name(input_name);
   output_operation = graph.get_operation_by_name(output_name);
 
-app = App(title="Hello world")
-
-def run_tensorflow():
+def run_program():
 
   with tf.Session(graph=graph) as sess:
     start = time.time()
@@ -120,13 +118,17 @@ def run_tensorflow():
 
   top_k = results.argsort()[-5:][::-1]
   labels = load_labels(label_file)
-
+  
   print('\nEvaluation time (1-image): {:.3f}s\n'.format(end-start))
   template = "{} (score={:0.5f})"
+  list_of_predictions = []
   for i in top_k:
     print(template.format(labels[i], results[i]))
+    list_of_predictions.append(template.format(labels[i], results[i]))
+  text.value = list_of_predictions[0]
   sess.close()
   tf.reset_default_graph()
+  
   camera = PiCamera()
   try:
     camera.resolution = (1024, 768)
@@ -135,9 +137,13 @@ def run_tensorflow():
     pass
   finally:
     camera.close()
+    
+app = App(title="Consumabot 0.3", bg="white", layout="auto", width=800, height=480)
+logo = Picture(app, image="elements/consumabot.png", grid=[2,0])
+title = Text(app, text="Currently detected", size=25, font="Arial", grid=[2,1])
+text = Text(app, text="Starting detection", size=22, color="grey", font="Arial", grid=[2,3])
 
-run_program()
-app = App("Consumabot v0.3")
-text = Text(app, text="Starting detection")
-text.repeat(1000, run_tensorflow)  # Schedule call to counter() every 1000ms
+logo.width = 600
+logo.height = 100
+text.repeat(1000, run_program)  # Schedule call to counter() every 1000ms
 app.display()    
