@@ -10,6 +10,8 @@ import time
 from guizero import App, Text, Picture
 import numpy as np
 import tensorflow as tf
+from itertools import cycle
+import os
 
 def load_graph(model_file):
   graph = tf.Graph()
@@ -26,6 +28,7 @@ def read_tensor_from_image_file(file_name, input_height=299, input_width=299,
 				input_mean=0, input_std=255):
   input_name = "file_reader"
   output_name = "normalized"
+  print('filename'+file_name)
   file_reader = tf.read_file(file_name, input_name)
   if file_name.endswith(".png"):
     image_reader = tf.image.decode_png(file_reader, channels = 3,
@@ -55,7 +58,7 @@ def load_labels(label_file):
   return label
 
 if __name__ == "__main__":
-  file_name = "tf_files/capture.jpg"
+  file_name = "tf_files/capture"
   model_file = "tf_files/retrained_graph.pb"
   label_file = "tf_files/retrained_labels.txt"
   input_height = 224
@@ -97,7 +100,7 @@ if __name__ == "__main__":
     output_layer = args.output_layer
 
   graph = load_graph(model_file)
-  t = read_tensor_from_image_file(file_name,
+  t = read_tensor_from_image_file(file_name+".jpg",
                                   input_height=input_height,
                                   input_width=input_width,
                                   input_mean=input_mean,
@@ -107,43 +110,55 @@ if __name__ == "__main__":
   output_name = "import/" + output_layer
   input_operation = graph.get_operation_by_name(input_name);
   output_operation = graph.get_operation_by_name(output_name);
-
+i=0
+fname=file_name
 def run_program():
-
-  with tf.Session(graph=graph) as sess:
-    start = time.time()
-    results = sess.run(output_operation.outputs[0],
+    global fname
+    t = read_tensor_from_image_file(fname+".jpg",
+                                    input_height=input_height,
+                                    input_width=input_width,
+                                    input_mean=input_mean,
+                                    input_std=input_std)
+    with tf.Session(graph=graph) as sess:
+        start = time.time()
+        results = sess.run(output_operation.outputs[0],
                       {input_operation.outputs[0]: t})
-    end=time.time()
-  results = np.squeeze(results)
+        end=time.time()
+    results = np.squeeze(results)
 
-  top_k = results.argsort()[-5:][::-1]
-  labels = load_labels(label_file)
-  
-  print('\nEvaluation time (1-image): {:.3f}s\n'.format(end-start))
-  template = "{} (score={:0.5f})"
-  list_of_predictions = []
-  for i in top_k:
-    print(template.format(labels[i], results[i]))
-    list_of_predictions.append(template.format(labels[i], results[i]))
-  text.value = list_of_predictions[0]
-  sess.close()
-  tf.reset_default_graph()
-  camera = PiCamera()
-  camera.resolution = (1024, 768)
-  sleep(2)
-  print ("Sleeping")
-  camera.capture('tf_files/capture.jpg')
-  camera.close()
-  print("Photo taken")
-    
+    top_k = results.argsort()[-5:][::-1]
+    labels = load_labels(label_file)
+
+    print('\nEvaluation time (1-image): {:.3f}s\n'.format(end-start))
+    template = "{} (score={:0.5f})"
+    list_of_predictions = []
+    for i in top_k:
+        print(template.format(labels[i], results[i]))
+        list_of_predictions.append(template.format(labels[i], results[i]))
+    text.value = list_of_predictions[0]
+    sess.close()
+    tf.reset_default_graph()
+    if (not fname == file_name):
+        os.remove(fname + ".jpg")
+    if i>100:
+        i=0
+    fname = file_name + str(i)
+    camera = PiCamera()
+    camera.resolution = (1024, 768)
+    sleep(2)
+    print ("Sleeping")
+    camera.capture(fname+".jpg")
+    camera.close()
+    print("Photo taken")
+
 app = App(title="Consumabot 0.3", bg="white", layout="auto", width=800, height=480)
 logo = Picture(app, image="elements/consumabot.png", grid=[2,0])
 title = Text(app, text="Currently detected", size=25, font="Arial", grid=[2,1])
 text = Text(app, text="Starting detection", size=22, color="grey", font="Arial", grid=[2,3])
 
-logo.width = 600
-logo.height = 100
+# logo.width = 600
+# logo.height = 100
 text.repeat(1000, run_program)
 #text.repeat(500, take_picture) # Schedule call to counter() every 1000ms
-app.display()    
+app.display()
+os.remove(fname+".jpg")
