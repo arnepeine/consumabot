@@ -13,7 +13,7 @@ If you have any questions or comments, please let me know!
 
 Arne Peine
 
-Attributions: This software is part of my Master's Thesis
+Attributions: This software is part of my Master's Thesis for the Master of Health Business Administration
 
 # Step 1: The hardware setup
 Get the required hardware:
@@ -25,7 +25,36 @@ Get the required hardware:
 - 32GB SD card
 
 # Step 2: Install Raspbian
-You can install Raspbian by copying the official Image of Raspbian
+You can install Raspbian by copying the official image of Raspbian (http://raspberrypi.org)
+- Download Etcher (https://etcher.io/) and install it.
+- Connect an SD card reader with the SD card inside.
+- Open Etcher and select the Raspberry Pi .img or .zip file you wish to write.
+- Review your selections and click 'Flash!'
+
+# Step 3: Install requirements
+Raspbian comes with a preinstalled Python 3.4, so there is no need to install that. If you are using an alternative distribution, you might need to do that.
+
+Now install pip
+
+```sh
+$ pip3 -V # for Python 3.n
+$ pip -V  # for Python 2.7
+```
+
+Atlas is a math library and also required for Tensorflow
+
+```sh
+$ sudo apt install libatlas-base-dev
+```
+
+Installing tensorflow is now much easier, because it comes precompiled for Raspberry Pi!
+
+```sh
+$ pip3 install tensorflow     # Python 3.n
+$ pip install tensorflow # Python 2.7
+```
+
+
 
 
 ![N|Solid](https://cldup.com/dTxpPi9lDf.thumb.png)](https://nodesource.com/products/nsolid)
