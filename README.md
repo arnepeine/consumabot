@@ -1,4 +1,5 @@
-# Consumabot - Image recogintion with Tensorflow for medical consumables
+# Consumabot
+# Source code for the manuscript "A Distributed Deep Learning Approach for Tracking Medical Consumable Materials on Intensive Care Units with Convolutional Neural Networks"
 
 Millions of medical consumables (like syringes, sterile swabs, one-way material, fluid supplements) are used in hospitals every day. Although these materials are suprisingly expensive, it is amost impossible to keep track of them. Most of them do not have a barcode or RFID on them, even if they have, using a barcode scanner in the medical environment is certainly not an ideal solution.
 
