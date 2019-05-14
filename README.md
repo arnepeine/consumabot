@@ -101,4 +101,4 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 Tensorflow is released under the Apache 2.0 license
-Parts of the software are based on the official TensorFlow repository and the "TensorFlow for Poets" tutorial
+Parts of the software are based on the official TensorFlow repository and the "TensorFlow for Poets" tutorial here: https://codelabs.developers.google.com/codelabs/tensorflow-for-poets/#0
