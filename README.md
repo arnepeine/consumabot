@@ -1,6 +1,8 @@
 # Consumabot
 # Source code for the manuscript "A Distributed Deep Learning Approach for Tracking Medical Consumable Materials on Intensive Care Units with Convolutional Neural Networks"
 
+Arne Peine et al. A Deep Learning Approach for Managing Medical Consumable Materials on Intensive Care Units via Convolutional Neural Networks. J Med Internet Res (submitted). doi:10.2196/14806
+
 Millions of medical consumables (like syringes, sterile swabs, one-way material, fluid supplements) are used in hospitals every day. Although these materials are suprisingly expensive, it is amost impossible to keep track of them. Most of them do not have a barcode or RFID on them, even if they have, using a barcode scanner in the medical environment is certainly not an ideal solution.
 
 Consumabot is a low-cost solution for this problem, using common computing platforms and open-source software/hardware. It runs on Raspberry Pi, equipped with a standard camera and a 32 GB SD memory card. It recognizes the acquired image via a Neural Network, implemented on TensorFlow.
